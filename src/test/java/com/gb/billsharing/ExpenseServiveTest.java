@@ -45,6 +45,19 @@ public class ExpenseServiveTest {
         User user = userService.createUser("bagesh@gmail.com", "3486199635");
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
                 , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
+        expenseService.addUsersToExpense(expense.getId(), "bagesh@gmail.com");
+
+
+        assertNotNull(expense.getExpenseGroup().getGroupMembers());
+        assertEquals(1, expense.getExpenseGroup().getGroupMembers().size());
+    }
+
+    @Test
+    @DisplayName("Add user to test")
+    public void assignExpenseShareTest() {
+        User user = userService.createUser("bagesh@gmail.com", "3486199635");
+        Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
+                , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
         try {
             expenseService.addUsersToExpense(expense.getId(), "bagesh@gmail.com");
             expenseService.assignExpenseShare(expense.getId(),
@@ -52,8 +65,10 @@ public class ExpenseServiveTest {
         } catch (ExpenseDoesNotExistsException expenseDoesNotExistsException) {
             System.out.println(expenseDoesNotExistsException.getMessage());
         }
-
         assertNotNull(expense.getExpenseGroup().getGroupMembers());
         assertEquals(1, expense.getExpenseGroup().getGroupMembers().size());
+        assertNotNull(expense.getExpenseGroup().getExpenseGroupId());
     }
+
+
 }
