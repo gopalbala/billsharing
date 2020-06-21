@@ -2,6 +2,7 @@ package com.gb.billsharing;
 
 import com.gb.billsharing.exceptions.ExpenseDoesNotExistsException;
 import com.gb.billsharing.model.Expense;
+import com.gb.billsharing.model.ExpenseStatus;
 import com.gb.billsharing.model.User;
 import com.gb.billsharing.repository.ExpenseRepository;
 import com.gb.billsharing.service.ExpenseService;
@@ -70,5 +71,14 @@ public class ExpenseServiveTest {
         assertNotNull(expense.getExpenseGroup().getExpenseGroupId());
     }
 
+    @Test
+    @DisplayName("Add user to test")
+    public void setExpenseStatusTest() {
+        User user = userService.createUser("bagesh@gmail.com", "3486199635");
+        Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
+                , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
+        expense.setExpenseStatus(ExpenseStatus.SETTLED);
+        assertEquals(ExpenseStatus.SETTLED, expense.getExpenseStatus());
+    }
 
 }
