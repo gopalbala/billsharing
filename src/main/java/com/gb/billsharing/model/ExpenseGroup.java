@@ -3,18 +3,21 @@ package com.gb.billsharing.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 public class ExpenseGroup {
 
-    @Setter
-    private List<User> groupMembers;
+    public void ExpenseGroup() {
+        groupMembers = new HashSet<>();
+    }
+    private Set<User> groupMembers;
     private String expenseGroupId;
     @Setter
-    private Map<String, Contribution> userContributions;
+    private Map<String, UserShare> userContributions;
 
     public ExpenseGroup() {
         this.expenseGroupId = UUID.randomUUID().toString();

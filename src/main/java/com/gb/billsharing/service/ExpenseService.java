@@ -1,7 +1,9 @@
 package com.gb.billsharing.service;
 
+import com.gb.billsharing.model.Contribution;
 import com.gb.billsharing.model.Expense;
 import com.gb.billsharing.model.ExpenseGroup;
+import com.gb.billsharing.model.UserShare;
 import com.gb.billsharing.repository.ExpenseRepository;
 import com.gb.billsharing.repository.UserRepository;
 
@@ -30,5 +32,14 @@ public class ExpenseService {
         ExpenseRepository.expenseMap.get(expenseId)
                 .getExpenseGroup().getGroupMembers()
                 .add(UserRepository.userHashMap.get(emailId));
+    }
+
+    public void assignExpenseShare(String expenseId, String emailId, double share) {
+        if (!ExpenseRepository.expenseMap.containsKey(expenseId)) {
+            System.out.println("Better create expense and come here....");
+        }
+        ExpenseRepository.expenseMap.get(expenseId)
+                .getExpenseGroup()
+                .getUserContributions().putIfAbsent(emailId,new UserShare(emailId,share));
     }
 }
