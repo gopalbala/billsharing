@@ -42,11 +42,11 @@ public class ExpenseServiveTest {
 
     @Test
     @DisplayName("Add user to test")
-    public void addUserToExpenseTest() {
+    public void addUserToExpenseTest() throws ExpenseDoesNotExistsException{
         User user = userService.createUser("bagesh@gmail.com", "bagesh", "3486199635");
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
                 , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
-        expenseService.addUsersToExpense(expense.getId(), "bagesh@gmail.com");
+        expenseService.addUsersToExpense(expense.getId(),  "bagesh@gmail.com");
 
 
         assertNotNull(expense.getExpenseGroup().getGroupMembers());
