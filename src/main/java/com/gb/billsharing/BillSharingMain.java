@@ -1,24 +1,30 @@
 package com.gb.billsharing;
 
+import com.gb.billsharing.exceptions.ContributionExceededException;
 import com.gb.billsharing.exceptions.ExpenseDoesNotExistsException;
-import com.gb.billsharing.model.Expense;
-import com.gb.billsharing.model.ExpenseStatus;
-import com.gb.billsharing.model.User;
+import com.gb.billsharing.exceptions.ExpenseSettledException;
+import com.gb.billsharing.exceptions.InvalidExpenseState;
+import com.gb.billsharing.model.*;
 import com.gb.billsharing.repository.ExpenseRepository;
 import com.gb.billsharing.service.ExpenseService;
 import com.gb.billsharing.service.UserService;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Set;
 
 public class BillSharingMain {
 
     static ExpenseService expenseService;
     static UserService userService;
-    public static void main(String[] args) {
-        createTestUsers();
+
+    public static void main(String[] args) throws ContributionExceededException, InvalidExpenseState,
+            ExpenseSettledException {
         expenseService = new ExpenseService();
         userService = new UserService();
+        createTestUsers();
+
         Expense expense = createLunchExpense();
         try {
             bifurcateExpense(expense.getId());
@@ -27,6 +33,15 @@ public class BillSharingMain {
         }
         expense.setExpenseStatus(ExpenseStatus.PENDING);
 
+        Set<User> users = expense.getExpenseGroup().getGroupMembers();
+        for (User user : users) {
+            contributeToExpense(expense.getId(), user.getEmailId());
+        }
+        if (expenseService.isExpenseSettled(expense.getId())) {
+            System.out.println("Expense Settled....");
+            expenseService.setExpenseStatus(expense.getId(), ExpenseStatus.SETTLED);
+        }
+        System.out.println("Bye......");
     }
 
     private static void createTestUsers() {
@@ -54,20 +69,34 @@ public class BillSharingMain {
 
     public static Expense createLunchExpense() {
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
-        , LocalDateTime.of(2020, Month.JUNE,19,12,0),2000.00,"vishnu@gmail.com");
+                , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, "vishnu@gmail.com");
         return expense;
     }
 
     private static void bifurcateExpense(String expenseId) throws ExpenseDoesNotExistsException {
-        expenseService.addUsersToExpense(expenseId,"bagesh@gmail.com");
-        expenseService.addUsersToExpense(expenseId,"divya@gmail.com");
-        expenseService.addUsersToExpense(expenseId,"palani@gmail.com");
-        expenseService.addUsersToExpense(expenseId,"neha@gmail.com");
+        expenseService.addUsersToExpense(expenseId, "bagesh@gmail.com");
+        expenseService.addUsersToExpense(expenseId, "divya@gmail.com");
+        expenseService.addUsersToExpense(expenseId, "palani@gmail.com");
+        expenseService.addUsersToExpense(expenseId, "neha@gmail.com");
 
-        expenseService.assignExpenseShare(expenseId, ExpenseRepository.expenseMap.get(expenseId).getUserId(),400);
-        expenseService.assignExpenseShare(expenseId, "bagesh@gmail.com",400);
-        expenseService.assignExpenseShare(expenseId, "divya@gmail.com",400);
-        expenseService.assignExpenseShare(expenseId, "palani@gmail.com",400);
-        expenseService.assignExpenseShare(expenseId, "neha@gmail.com",400);
+        expenseService.assignExpenseShare(expenseId, ExpenseRepository.expenseMap.get(expenseId).getUserId(), 400);
+        expenseService.assignExpenseShare(expenseId, "bagesh@gmail.com", 400);
+        expenseService.assignExpenseShare(expenseId, "divya@gmail.com", 400);
+        expenseService.assignExpenseShare(expenseId, "palani@gmail.com", 400);
+        expenseService.assignExpenseShare(expenseId, "neha@gmail.com", 400);
+    }
+
+    private static void contributeToExpense(String expenseId, String userId)
+            throws ContributionExceededException, InvalidExpenseState, ExpenseSettledException {
+        Contribution contribution = new Contribution();
+        Expense expense = ExpenseRepository.expenseMap.get(expenseId);
+        ExpenseGroup expenseGroup = expense.getExpenseGroup();
+        UserShare userShare = expenseGroup.getUserContributions().get(userId);
+        contribution.setContributionValue(userShare.getShare());
+        contribution.setContributionDate(LocalDateTime.now());
+        contribution.setTransactionId("T" + Instant.EPOCH);
+        contribution.setTransactionDescription("Transferred from UPI");
+        userService.contributeToExpense(expenseId, userId, contribution);
+
     }
 }

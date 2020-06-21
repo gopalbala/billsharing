@@ -10,5 +10,5 @@ import java.util.Map;
 @Getter
 @Setter
 public class UserRepository {
-   public static Map<String, User> userHashMap = new HashMap<>();
+    public static Map<String, User> userHashMap = new HashMap<>();
 }

@@ -1,18 +1,15 @@
 package com.gb.billsharing.service;
 
 import com.gb.billsharing.exceptions.ExpenseDoesNotExistsException;
-import com.gb.billsharing.model.Expense;
-import com.gb.billsharing.model.ExpenseGroup;
-import com.gb.billsharing.model.ExpenseStatus;
-import com.gb.billsharing.model.UserShare;
+import com.gb.billsharing.model.*;
 import com.gb.billsharing.repository.ExpenseRepository;
 import com.gb.billsharing.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
-@Slf4j
+//@Slf4j
 public class ExpenseService {
 
     public Expense createExpense(String title, String description, LocalDateTime expenseDate, double expenseAmount,
@@ -54,5 +51,23 @@ public class ExpenseService {
         expense.setExpenseStatus(expenseStatus);
     }
 
+    public boolean isExpenseSettled(String expenseId) {
+        Expense expense = ExpenseRepository.expenseMap.get(expenseId);
+        ExpenseGroup expenseGroup = expense.getExpenseGroup();
+        Map<String, UserShare> userContributions = expenseGroup.getUserContributions();
+
+        double total = expense.getExpenseAmount();
+
+        for (Map.Entry<String, UserShare> entry : userContributions.entrySet()) {
+            UserShare userShare = entry.getValue();
+            for (Contribution contribution : userShare.getContributions()) {
+                total -= contribution.getContributionValue();
+            }
+        }
+        if (total <= 1) {
+            return true;
+        }
+        return false;
+    }
 
 }

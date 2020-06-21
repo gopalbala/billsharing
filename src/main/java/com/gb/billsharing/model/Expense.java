@@ -18,6 +18,5 @@ public class Expense {
     private LocalDateTime expenseDate;
     private ExpenseStatus expenseStatus;
     private double expenseAmount;
-    @Getter
     private ExpenseGroup expenseGroup;
 }
