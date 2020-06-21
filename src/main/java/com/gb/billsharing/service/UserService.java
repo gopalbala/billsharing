@@ -8,8 +8,8 @@ import com.gb.billsharing.repository.ExpenseRepository;
 import com.gb.billsharing.repository.UserRepository;
 
 public class UserService {
-    public User createUser(String emailId, String phoneNumber) {
-        User user = new User(emailId, phoneNumber);
+    public User createUser(String emailId, String name, String phoneNumber) {
+        User user = new User(emailId, name, phoneNumber);
         UserRepository.userHashMap.putIfAbsent(emailId, user);
         return user;
     }
