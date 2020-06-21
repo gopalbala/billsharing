@@ -30,7 +30,7 @@ public class ExpenseServiveTest {
     @Test
     @DisplayName("Create expense test")
     public void createUserTest() {
-        User user = userService.createUser("bagesh@gmail.com", "3486199635");
+        User user = userService.createUser("bagesh@gmail.com", "bagesh", "3486199635");
         assertNotNull(user);
         assertEquals("bagesh@gmail.com", user.getEmailId());
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
@@ -43,7 +43,7 @@ public class ExpenseServiveTest {
     @Test
     @DisplayName("Add user to test")
     public void addUserToExpenseTest() {
-        User user = userService.createUser("bagesh@gmail.com", "3486199635");
+        User user = userService.createUser("bagesh@gmail.com", "bagesh", "3486199635");
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
                 , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
         expenseService.addUsersToExpense(expense.getId(), "bagesh@gmail.com");
@@ -56,7 +56,7 @@ public class ExpenseServiveTest {
     @Test
     @DisplayName("Add user to test")
     public void assignExpenseShareTest() {
-        User user = userService.createUser("bagesh@gmail.com", "3486199635");
+        User user = userService.createUser("bagesh@gmail.com", "bagesh", "3486199635");
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
                 , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
         try {
@@ -74,7 +74,7 @@ public class ExpenseServiveTest {
     @Test
     @DisplayName("Add user to test")
     public void setExpenseStatusTest() {
-        User user = userService.createUser("bagesh@gmail.com", "3486199635");
+        User user = userService.createUser("bagesh@gmail.com", "bagesh", "3486199635");
         Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
                 , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, user.getEmailId());
         expense.setExpenseStatus(ExpenseStatus.SETTLED);
