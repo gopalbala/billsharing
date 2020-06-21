@@ -1,10 +1,19 @@
 package com.gb.billsharing.model;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Expense {
+    private String id;
+    private String title;
+    private String description;
+    private LocalDateTime expenseDate;
+    private double expenseAmount;
 }
