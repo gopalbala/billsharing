@@ -24,6 +24,7 @@ public class ExpenseService {
                 .expenseDate(expenseDate)
                 .expenseAmount(expenseAmount)
                 .userId(userId)
+                .expenseStatus(ExpenseStatus.CREATED)
                 .expenseGroup(new ExpenseGroup())
                 .build();
         ExpenseRepository.expenseMap.putIfAbsent(expense.getId(), expense);
