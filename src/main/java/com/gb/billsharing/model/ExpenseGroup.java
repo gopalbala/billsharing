@@ -5,11 +5,18 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Getter
-@Setter
 public class ExpenseGroup {
-    private String expenseGroupId;
+
+    @Setter
     private List<User> groupMembers;
+    private String expenseGroupId;
+    @Setter
     private Map<String, Contribution> userContributions;
+
+    public ExpenseGroup() {
+        this.expenseGroupId = UUID.randomUUID().toString();
+    }
 }
