@@ -1,16 +1,20 @@
 package com.gb.billsharing.service;
 
-import com.gb.billsharing.model.Contribution;
+import com.gb.billsharing.exceptions.ExpenseDoesNotExistsException;
 import com.gb.billsharing.model.Expense;
 import com.gb.billsharing.model.ExpenseGroup;
+import com.gb.billsharing.model.ExpenseStatus;
 import com.gb.billsharing.model.UserShare;
 import com.gb.billsharing.repository.ExpenseRepository;
 import com.gb.billsharing.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 public class ExpenseService {
+
     public Expense createExpense(String title, String description, LocalDateTime expenseDate, double expenseAmount,
                                  String userId) {
         Expense expense = Expense.builder()
@@ -22,6 +26,7 @@ public class ExpenseService {
                 .userId(userId)
                 .expenseGroup(new ExpenseGroup())
                 .build();
+        ExpenseRepository.expenseMap.putIfAbsent(expense.getId(), expense);
         return expense;
     }
 
@@ -34,12 +39,19 @@ public class ExpenseService {
                 .add(UserRepository.userHashMap.get(emailId));
     }
 
-    public void assignExpenseShare(String expenseId, String emailId, double share) {
+    public void assignExpenseShare(String expenseId, String emailId, double share) throws ExpenseDoesNotExistsException {
         if (!ExpenseRepository.expenseMap.containsKey(expenseId)) {
-            System.out.println("Better create expense and come here....");
+            throw new ExpenseDoesNotExistsException(String.format("Expense %s does not exists", expenseId));
         }
-        ExpenseRepository.expenseMap.get(expenseId)
-                .getExpenseGroup()
-                .getUserContributions().putIfAbsent(emailId,new UserShare(emailId,share));
+        Expense expense = ExpenseRepository.expenseMap.get(expenseId);
+        expense.getExpenseGroup()
+                .getUserContributions().putIfAbsent(emailId, new UserShare(emailId, share));
     }
+
+    public void setExpenseStatus(String expenseId, ExpenseStatus expenseStatus) {
+        Expense expense = ExpenseRepository.expenseMap.get(expenseId);
+        expense.setExpenseStatus(expenseStatus);
+    }
+
+
 }
