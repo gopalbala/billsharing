@@ -10,8 +10,6 @@ import java.util.Map;
 @Setter
 public class ExpenseGroup {
     private String expenseGroupId;
-    private String expenseId;
-    private Expense expense;
     private List<User> groupMembers;
     private Map<String, Contribution> userContributions;
 }
