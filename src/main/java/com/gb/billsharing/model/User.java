@@ -10,16 +10,14 @@ import java.util.UUID;
 @Setter
 public class User {
     private String name;
-
     private String userId;
     private String emailId;
+    private String phoneNumber;
 
-    public User(@NonNull String emailId, String name, String phoneNUmber) {
+    public User(@NonNull String emailId, String name, String phoneNumber) {
         userId = UUID.randomUUID().toString();
         this.emailId = emailId;
         this.name = name;
-        this.phoneNumber = phoneNUmber;
+        this.phoneNumber = phoneNumber;
     }
-
-    private String phoneNumber;
 }

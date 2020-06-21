@@ -68,8 +68,10 @@ public class BillSharingMain {
     }
 
     public static Expense createLunchExpense() {
-        Expense expense = expenseService.createExpense("Team Lunch", "Friday 19Th June Lunch in Briyani zone"
-                , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0), 2000.00, "vishnu@gmail.com");
+        Expense expense = expenseService.createExpense("Team Lunch",
+                "Friday 19Th June Lunch in Briyani zone"
+                , LocalDateTime.of(2020, Month.JUNE, 19, 12, 0),
+                2000.00, "vishnu@gmail.com");
         return expense;
     }
 
@@ -79,7 +81,8 @@ public class BillSharingMain {
         expenseService.addUsersToExpense(expenseId, "palani@gmail.com");
         expenseService.addUsersToExpense(expenseId, "neha@gmail.com");
 
-        expenseService.assignExpenseShare(expenseId, ExpenseRepository.expenseMap.get(expenseId).getUserId(), 400);
+        expenseService.assignExpenseShare(expenseId,
+                ExpenseRepository.expenseMap.get(expenseId).getUserId(), 400);
         expenseService.assignExpenseShare(expenseId, "bagesh@gmail.com", 400);
         expenseService.assignExpenseShare(expenseId, "divya@gmail.com", 400);
         expenseService.assignExpenseShare(expenseId, "palani@gmail.com", 400);

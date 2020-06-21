@@ -11,6 +11,7 @@ import java.util.UUID;
 
 //@Slf4j
 public class ExpenseService {
+    private NotificationService notificationService = new NotificationServiceImpl();
 
     public Expense createExpense(String title, String description, LocalDateTime expenseDate, double expenseAmount,
                                  String userId) {
@@ -28,22 +29,32 @@ public class ExpenseService {
         return expense;
     }
 
-    public void addUsersToExpense(String expenseId, String emailId) {
+    public void addUsersToExpense(String expenseId, String emailId) throws
+            ExpenseDoesNotExistsException{
         if (!ExpenseRepository.expenseMap.containsKey(expenseId)) {
-            System.out.println("Better create expense and come here....");
+            throw new
+                    ExpenseDoesNotExistsException("Better create expense and come here....");
+//            System.out.println("Better create expense and come here....");
         }
         ExpenseRepository.expenseMap.get(expenseId)
                 .getExpenseGroup().getGroupMembers()
                 .add(UserRepository.userHashMap.get(emailId));
+
+        if (notificationService != null) {
+            notificationService.notifyUser(UserRepository.userHashMap.get(emailId),
+                    ExpenseRepository.expenseMap.get(expenseId));
+        }
     }
 
-    public void assignExpenseShare(String expenseId, String emailId, double share) throws ExpenseDoesNotExistsException {
+    public void assignExpenseShare(String expenseId, String emailId, double share)
+            throws ExpenseDoesNotExistsException {
         if (!ExpenseRepository.expenseMap.containsKey(expenseId)) {
             throw new ExpenseDoesNotExistsException(String.format("Expense %s does not exists", expenseId));
         }
         Expense expense = ExpenseRepository.expenseMap.get(expenseId);
         expense.getExpenseGroup()
                 .getUserContributions().putIfAbsent(emailId, new UserShare(emailId, share));
+
     }
 
     public void setExpenseStatus(String expenseId, ExpenseStatus expenseStatus) {
