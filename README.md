@@ -1,7 +1,7 @@
-# Expense / Bill sharing app
+# Design - Expense / Bill sharing app
 App Allows users to share an Expense
 
-Users will be able to organize expenses among multiple heads and share with multiple users.  
+Users will be able to organize expenses among multiple heads and share with multiple users.    
 Users can create a group.  
 Share an expense among the members of group.  
 Send notification to on their share to be paid.  
@@ -12,15 +12,15 @@ Track paid users.
 
 Users should be able to register.  
 User creation is idempotent.  
-Registered user should be able to create an expense.
+Registered user should be able to create an expense.  
 Expense has three states  
 
    1. Created
    2. Pending
    3. Settled
  
-Initial state of the expense would be created
-Registered user should be able to create expense group i.e. to be able to add users to expenses.
+Initial state of the expense would be created.  
+Registered user should be able to create expense group i.e. to be able to add users to expenses.  
 Bifurcation is custom no need to implement equal sharing.
 Once the bifurcation is complete the expense state becomes pending.     
 Provision to extend to provide user notification when someone adds them to the expense.  
@@ -32,6 +32,18 @@ Expense creator should be able to track their expenses and payments made by user
 Users can settle expense in parts.  
 
 The solution should be extendable.  
-No need to persist data in database. Data can be stored in memory.  
+No need to persist data in database. Data can be stored in memory.
+
+Workflow
+
+User creates an expense  
+Add other users  
+Share it 
+Move Expense state to pending  
+Notify  
+Users contribute  
+Check if the bill is settled   
+If so move the expense to settled  
+  
 
 
